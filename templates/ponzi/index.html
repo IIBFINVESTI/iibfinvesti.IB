@@ -1,0 +1,197 @@
+{% extends "ponzi/base.html" %}
+
+{% block title %}IIBF INVEST - L'Avenir de votre Capital{% endblock %}
+
+{% block content %}
+<style>
+    /* Verrouillage du cadre App */
+    .home-viewport {
+        overflow-x: hidden;
+        width: 100%;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+
+    /* Hero Section High-Tech */
+    .hero-premium {
+        background: radial-gradient(circle at top right, rgba(59, 130, 246, 0.15), transparent),
+                    radial-gradient(circle at bottom left, rgba(245, 158, 11, 0.05), transparent);
+        padding: 60px 20px 80px 20px;
+        text-align: center;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .hero-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        line-height: 1.1;
+        letter-spacing: -2px;
+        background: linear-gradient(to bottom, #fff 0%, #94a3b8 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .stat-badge {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 20px;
+        margin-top: -40px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
+
+    /* Cartes de fonctionnalités Glass */
+    .feature-box {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 24px;
+        padding: 25px;
+        height: 100%;
+        transition: 0.3s;
+    }
+
+    .feature-box:active {
+        background: rgba(59, 130, 246, 0.05);
+        border-color: rgba(59, 130, 246, 0.2);
+    }
+
+    .icon-box {
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, var(--iibf-accent), #1d4ed8);
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+        box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+    }
+
+    /* Animation du bouton principal */
+    .glow-button {
+        background: var(--iibf-gold);
+        color: #000;
+        font-weight: 800;
+        border: none;
+        border-radius: 16px;
+        padding: 18px;
+        box-shadow: 0 0 20px rgba(245, 158, 11, 0.4);
+        transition: 0.3s;
+    }
+
+    .glow-button:active {
+        transform: scale(0.95);
+        box-shadow: 0 0 10px rgba(245, 158, 11, 0.2);
+    }
+</style>
+
+<div class="home-viewport">
+    
+    <section class="hero-premium">
+        <div class="container">
+            <div class="d-inline-flex align-items-center bg-white bg-opacity-5 rounded-pill px-3 py-1 mb-4 border border-white border-opacity-10">
+                <span class="text-warning small fw-800">● LIVE 2026</span>
+                <span class="text-white-50 small ms-2">Nouveau système sécurisé</span>
+            </div>
+            
+            <h1 class="hero-title mb-3">
+                Libérez votre <br>Potentiel Financier
+            </h1>
+            
+            <p class="text-white-50 px-3 mb-5">
+                Investissez dans la première infrastructure de gestion automatisée en Afrique Centrale.
+            </p>
+            
+            <div class="d-grid gap-3 px-2">
+                <a href="{% url 'inscription' %}" class="btn glow-button">
+                    DÉMARRER L'INVESTISSEMENT
+                </a>
+                <a href="{% url 'connexion' %}" class="btn btn-link text-white fw-bold text-decoration-none small">
+                    DÉJÀ MEMBRE ? SE CONNECTER
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="container px-4">
+        <div class="stat-badge">
+            <div class="row text-center align-items-center">
+                <div class="col-4 border-end border-white border-opacity-10">
+                    <div class="fw-800 text-white h4 mb-0">10.5%</div>
+                    <div class="text-white-50 small" style="font-size: 10px;">JOURNALIER</div>
+                </div>
+                <div class="col-4 border-end border-white border-opacity-10">
+                    <div class="fw-800 text-white h4 mb-0">24/7</div>
+                    <div class="text-white-50 small" style="font-size: 10px;">SUPPORT</div>
+                </div>
+                <div class="col-4">
+                    <div class="fw-800 text-warning h4 mb-0">SSL+</div>
+                    <div class="text-white-50 small" style="font-size: 10px;">SÉCURITÉ</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="container py-5 mt-4">
+        <h6 class="text-center text-white-50 small fw-bold mb-4">POURQUOI CHOISIR IIBF FOUNDATION ?</h6>
+        
+        <div class="row g-3">
+            <div class="col-6">
+                <div class="feature-box">
+                    <div class="icon-box">
+                        <i class="bi bi-shield-lock-fill text-white fs-4"></i>
+                    </div>
+                    <h6 class="fw-bold text-white small">Protection Totale</h6>
+                    <p class="text-white-50 mb-0" style="font-size: 11px;">Cryptage de bout en bout de vos transactions.</p>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="feature-box">
+                    <div class="icon-box" style="background: linear-gradient(135deg, #10b981, #059669);">
+                        <i class="bi bi-lightning-fill text-white fs-4"></i>
+                    </div>
+                    <h6 class="fw-bold text-white small">Retrait Flash</h6>
+                    <p class="text-white-50 mb-0" style="font-size: 11px;">Traitement optimisé pour une réception rapide.</p>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="feature-box">
+                    <div class="icon-box" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                        <i class="bi bi-graph-up-arrow text-white fs-4"></i>
+                    </div>
+                    <h6 class="fw-bold text-white small">Gains Passifs</h6>
+                    <p class="text-white-50 mb-0" style="font-size: 11px;">Vos fonds travaillent même pendant votre sommeil.</p>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="feature-box">
+                    <div class="icon-box" style="background: linear-gradient(135deg, #6366f1, #4f46e5);">
+                        <i class="bi bi-people-fill text-white fs-4"></i>
+                    </div>
+                    <h6 class="fw-bold text-white small">Affiliation</h6>
+                    <p class="text-white-50 mb-0" style="font-size: 11px;">Gagnez 10% sur chaque parrainage actif.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="container mb-5 px-4 text-center">
+        <div class="p-4 rounded-4" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05);">
+            <div class="d-flex justify-content-center mb-3">
+                <div class="avatar-group d-flex">
+                    <div class="rounded-circle border border-dark bg-secondary" style="width:30px; height:30px; margin-right: -10px;"></div>
+                    <div class="rounded-circle border border-dark bg-primary" style="width:30px; height:30px; margin-right: -10px;"></div>
+                    <div class="rounded-circle border border-dark bg-warning" style="width:30px; height:30px;"></div>
+                </div>
+            </div>
+            <p class="small text-white-50">+12,400 investisseurs nous font confiance en 2026.</p>
+            <a href="https://wa.me/237687391981" class="btn btn-outline-success rounded-pill btn-sm px-4">
+                <i class="bi bi-whatsapp"></i> Rejoindre la Communauté
+            </a>
+        </div>
+    </section>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,190 @@
+{% extends "ponzi/base.html" %}
+
+{% block title %}IIBF | Connexion Sécurisée{% endblock %}
+
+{% block content %}
+<style>
+    /* CADRAGE AUTH */
+    .auth-viewport {
+        max-width: 450px;
+        margin: 0 auto;
+        padding: 60px 20px;
+    }
+
+    /* CARTE GLASSMORPHISM */
+    .auth-card {
+        background: rgba(17, 24, 39, 0.7);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 30px;
+        padding: 40px 30px;
+        box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+    }
+
+    /* CHASSIS DES INPUTS */
+    .form-input-container input {
+        background: rgba(255, 255, 255, 0.03) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        color: white !important;
+        border-radius: 16px !important;
+        padding: 16px 20px !important;
+        padding-right: 50px !important; /* Espace pour l'oeil */
+        font-size: 1rem !important;
+        width: 100%;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .form-input-container input:focus {
+        border-color: #3b82f6 !important;
+        background: rgba(255, 255, 255, 0.08) !important;
+        box-shadow: 0 0 20px rgba(59, 130, 246, 0.15) !important;
+        outline: none;
+    }
+
+    .brand-title {
+        font-size: 1.8rem;
+        font-weight: 800;
+        letter-spacing: -1.5px;
+    }
+
+    .btn-login {
+        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+        color: white;
+        border: none;
+        border-radius: 18px;
+        padding: 16px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        box-shadow: 0 10px 25px rgba(59, 130, 246, 0.4);
+        margin-top: 10px;
+        width: 100%;
+        transition: 0.3s;
+    }
+
+    .btn-login:active { transform: scale(0.96); }
+    .btn-login:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    label {
+        font-size: 0.7rem;
+        font-weight: 800;
+        color: rgba(255,255,255,0.4);
+        margin-left: 5px;
+        margin-bottom: 8px;
+        display: block;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .pass-icon {
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: rgba(255,255,255,0.3);
+        cursor: pointer;
+        z-index: 10;
+    }
+</style>
+
+<div class="auth-viewport">
+    
+    <div class="text-center mb-5">
+        <div class="brand-title mb-2">
+            <span class="text-white">II</span><span class="text-warning">BF</span> 
+            <span class="text-white-50 fw-light">INVEST</span>
+        </div>
+        <p class="text-white-50 small">Accédez à votre console d'investissement</p>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-info border-0 bg-info bg-opacity-10 text-info small py-2 rounded-3 mb-4 text-center">
+                <i class="bi bi-info-circle me-2"></i> {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="auth-card">
+        <form method="POST" id="loginForm">
+            {% csrf_token %}
+            
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger border-0 bg-danger bg-opacity-10 text-danger small py-2 rounded-3 mb-4 text-center">
+                    {% for error in form.non_field_errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% for field in form %}
+                <div class="mb-4">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    <div class="form-input-container position-relative">
+                        {{ field }}
+                        {% if "password" in field.id_for_label or field.name == "password" %}
+                            <i class="bi bi-eye pass-icon" onclick="toggleVisibility('{{ field.id_for_label }}', this)"></i>
+                        {% endif %}
+                    </div>
+                    {% if field.errors %}
+                        <div class="text-danger mt-2" style="font-size: 0.7rem;">
+                            <i class="bi bi-x-circle me-1"></i> {{ field.errors|striptags }}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <button type="submit" class="btn btn-login" id="submitBtn">
+                OUVRIR LA SESSION <i class="bi bi-shield-lock-fill ms-2"></i>
+            </button>
+        </form>
+
+        <div class="text-center mt-5">
+            <p class="text-white-50 small mb-1">Nouveau sur la plateforme ?</p>
+            <a href="{% url 'inscription' %}" class="text-warning fw-bold text-decoration-none small">CRÉER UN COMPTE GRATUIT</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 1. Ajustement des attributs au chargement
+    document.addEventListener('DOMContentLoaded', function() {
+        const inputs = document.querySelectorAll('input');
+        inputs.forEach(input => {
+            input.classList.add('form-control');
+            
+            // On cible l'identifiant (Username ou Email)
+            if(input.name === 'username' || input.id.includes('username')) {
+                input.setAttribute('placeholder', 'Email ou Nom d\'utilisateur');
+                input.setAttribute('required', '');
+            } 
+            // On cible le mot de passe
+            else if(input.type === 'password' || input.name === 'password') {
+                input.setAttribute('placeholder', '••••••••');
+                input.setAttribute('required', '');
+            }
+        });
+    });
+
+    // 2. Gestion de la soumission pour éviter les "Broken Pipe" et rechargements fantômes
+    const loginForm = document.getElementById('loginForm');
+    const submitBtn = document.getElementById('submitBtn');
+
+    loginForm.addEventListener('submit', function() {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span>CRYPTAGE EN COURS...`;
+    });
+
+    // 3. Fonction Toggle Visibilité
+    function toggleVisibility(id, icon) {
+        const field = document.getElementById(id);
+        if (field.type === "password") {
+            field.type = "text";
+            icon.classList.replace('bi-eye', 'bi-eye-slash');
+        } else {
+            field.type = "password";
+            icon.classList.replace('bi-eye-slash', 'bi-eye');
+        }
+    }
+</script>
+{% endblock %}

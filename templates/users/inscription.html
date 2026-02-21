@@ -1,0 +1,347 @@
+﻿{% extends "ponzi/base.html" %}
+
+{% block title %}IIBF | Inscription Officielle{% endblock %}
+
+{% block content %}
+<style>
+    :root {
+        --neon-blue: #00d2ff;
+        --neon-gold: #f59e0b;
+        --deep-bg: #070b14;
+        --card-glass: rgba(15, 23, 42, 0.85);
+        --glow-blue: rgba(0, 210, 255, 0.4);
+    }
+
+    /* 1. BANDE DÉFILANTE */
+    .news-ticker {
+        background: linear-gradient(90deg, #0072ff, var(--neon-blue));
+        color: white;
+        padding: 12px 0;
+        overflow: hidden;
+        white-space: nowrap;
+        font-weight: 800;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        box-shadow: 0 5px 20px rgba(0, 210, 255, 0.3);
+        position: relative;
+        z-index: 10;
+    }
+    .ticker-content {
+        display: inline-block;
+        padding-left: 100%;
+        animation: marquee 30s linear infinite;
+    }
+    @keyframes marquee {
+        0% { transform: translate(0, 0); }
+        100% { transform: translate(-100%, 0); }
+    }
+
+    /* 2. SECTION DÉFINITION IIBF */
+    .definition-section {
+        padding: 40px 20px 20px;
+        text-align: center;
+        background: radial-gradient(circle at center, rgba(0, 210, 255, 0.1) 0%, transparent 70%);
+    }
+    .brand-title {
+        font-size: 3rem;
+        font-weight: 900;
+        background: linear-gradient(135deg, #ffffff 0%, var(--neon-blue) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 15px;
+        filter: drop-shadow(0 0 15px var(--glow-blue));
+    }
+    .definition-card {
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 25px;
+        padding: 25px;
+        border: 1px dashed rgba(0, 210, 255, 0.3);
+        max-width: 550px;
+        margin: 0 auto;
+        backdrop-filter: blur(5px);
+    }
+
+    /* 3. CARTE D'INSCRIPTION */
+    .auth-viewport {
+        max-width: 500px;
+        margin: 0 auto;
+        padding-bottom: 80px;
+        position: relative;
+        z-index: 5;
+    }
+    .auth-card {
+        background: var(--card-glass);
+        backdrop-filter: blur(25px);
+        border: 1px solid rgba(0, 210, 255, 0.2);
+        border-radius: 40px;
+        padding: 45px 35px;
+        margin: 20px;
+        box-shadow: 0 30px 70px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 210, 255, 0.1);
+    }
+
+    /* 4. FORMULAIRE */
+    .django-form-field label {
+        font-size: 0.8rem;
+        font-weight: 800;
+        color: var(--neon-blue);
+        margin-bottom: 12px;
+        display: block;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+    }
+    .django-form-field input {
+        background: rgba(255, 255, 255, 0.04) !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        color: #fff !important;
+        border-radius: 22px !important;
+        padding: 18px 25px !important;
+        font-size: 1rem !important;
+        width: 100%;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .django-form-field input:focus {
+        border-color: var(--neon-blue) !important;
+        background: rgba(0, 210, 255, 0.08) !important;
+        box-shadow: 0 0 30px var(--glow-blue) !important;
+        outline: none;
+        transform: translateY(-3px);
+    }
+
+    .btn-submit {
+        background: linear-gradient(135deg, var(--neon-blue), #0072ff);
+        color: white;
+        border: none;
+        border-radius: 25px;
+        padding: 22px;
+        font-weight: 900;
+        font-size: 1.1rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        box-shadow: 0 15px 40px rgba(0, 210, 255, 0.4);
+        transition: 0.4s;
+        width: 100%;
+        margin-top: 25px;
+        cursor: pointer !important;
+    }
+    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 20px 50px rgba(0, 210, 255, 0.6); }
+
+    .password-toggle {
+        position: absolute;
+        right: 25px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--neon-blue);
+        cursor: pointer;
+        font-size: 1.4rem;
+        z-index: 10;
+    }
+
+    .error-msg {
+        color: #ff4d4d;
+        font-size: 0.78rem;
+        font-weight: 700;
+        margin-top: 8px;
+        display: block;
+    }
+    
+    .alert-danger-custom {
+        background: rgba(255, 77, 77, 0.1);
+        border: 1px solid #ff4d4d;
+        color: #ff4d4d;
+        padding: 15px;
+        border-radius: 20px;
+        margin-bottom: 20px;
+        font-size: 0.85rem;
+        font-weight: bold;
+    }
+</style>
+
+<div class="news-ticker">
+    <div class="ticker-content">
+        💎 IIBF INVEST : VOTRE PARTENAIRE FINANCIER INTELLIGENT • RETRAITS INSTANTANÉS (MOMO/OM) • SYSTÈME DE PARRAINAGE 10% • SÉCURITÉ DE GRADE BANCAIRE AES-256 💎
+    </div>
+</div>
+
+<div class="auth-viewport">
+    <div class="definition-section">
+        <h1 class="brand-title">IIBF INVEST</h1>
+        <div class="definition-card">
+            <p class="text-white small mb-0">
+                <span class="fw-bold text-info" style="font-size: 1rem;">International Intelligent Business Fund</span><br><br>
+                <span class="text-white-50">Une infrastructure financière de nouvelle génération utilisant le trading algorithmique pour générer des profits journaliers stables.</span>
+            </p>
+        </div>
+    </div>
+
+    <div class="auth-card">
+        {% if form.errors %}
+            <div class="alert-danger-custom text-center" id="voiceErrorSource">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                Veuillez vérifier les informations. Des erreurs ont été détectées.
+            </div>
+        {% endif %}
+
+        <form method="POST" id="registrationForm" autocomplete="off">
+            {% csrf_token %}
+            
+            <div style="display:none;">{{ form.username }}</div>
+
+            <div class="mb-4 django-form-field">
+                <label>{{ form.nom.label }}</label>
+                {{ form.nom }}
+                {% if form.nom.errors %}
+                    <span class="error-msg"><i class="bi bi-exclamation-octagon-fill me-1"></i> {{ form.nom.errors|striptags }}</span>
+                {% endif %}
+            </div>
+
+            <div class="mb-4 django-form-field">
+                <label>{{ form.prenom.label }}</label>
+                {{ form.prenom }}
+                {% if form.prenom.errors %}
+                    <span class="error-msg"><i class="bi bi-exclamation-octagon-fill me-1"></i> {{ form.prenom.errors|striptags }}</span>
+                {% endif %}
+            </div>
+
+            <div class="mb-4 django-form-field">
+                <label>{{ form.email.label }}</label>
+                {{ form.email }}
+                {% if form.email.errors %}
+                    <span class="error-msg"><i class="bi bi-exclamation-octagon-fill me-1"></i> {{ form.email.errors|striptags }}</span>
+                {% endif %}
+            </div>
+
+            <div class="mb-4 django-form-field">
+                <label>{{ form.telephone.label }}</label>
+                {{ form.telephone }}
+                {% if form.telephone.errors %}
+                    <span class="error-msg"><i class="bi bi-exclamation-octagon-fill me-1"></i> {{ form.telephone.errors|striptags }}</span>
+                {% endif %}
+            </div>
+
+            <div class="mb-4 django-form-field">
+                <label>{{ form.password.label }}</label>
+                <div class="position-relative">
+                    {{ form.password }}
+                    <i class="bi bi-eye password-toggle" onclick="togglePass('id_password', this)"></i>
+                </div>
+                {% if form.password.errors %}
+                    <span class="error-msg"><i class="bi bi-exclamation-octagon-fill me-1"></i> {{ form.password.errors|striptags }}</span>
+                {% endif %}
+            </div>
+
+            <div class="mb-4 django-form-field">
+                <label>{{ form.confirm_password.label }}</label>
+                <div class="position-relative">
+                    {{ form.confirm_password }}
+                    <i class="bi bi-eye password-toggle" onclick="togglePass('id_confirm_password', this)"></i>
+                </div>
+                {% if form.confirm_password.errors %}
+                    <span class="error-msg"><i class="bi bi-exclamation-octagon-fill me-1"></i> {{ form.confirm_password.errors|striptags }}</span>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="btn btn-submit" id="submitBtn">
+                CRÉER MON ACCÈS SÉCURISÉ <i class="bi bi-shield-lock-fill ms-2"></i>
+            </button>
+        </form>
+
+        <div class="text-center mt-5">
+            <p class="text-white-50 small mb-2">Déjà membre de la communauté ?</p>
+            <a href="{% url 'connexion' %}" class="text-decoration-none fw-bold" style="color: var(--neon-gold); letter-spacing: 1px;">SE CONNECTER AU TERMINAL</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    const form = document.getElementById('registrationForm');
+    
+    // Synchro Username
+    function syncUser() {
+        const emailInput = document.querySelector('input[name="email"]');
+        const usernameInput = document.querySelector('input[name="username"]');
+        if (emailInput && usernameInput) {
+            usernameInput.value = emailInput.value;
+        }
+    }
+
+    document.addEventListener('input', function(e) {
+        if (e.target.name === 'email') syncUser();
+    });
+
+    form.addEventListener('submit', function() {
+        syncUser();
+        document.getElementById('submitBtn').innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span>INITIALISATION...`;
+    });
+
+    // Toggle Password Visibility
+    function togglePass(id, icon) {
+        const input = document.getElementById(id);
+        if (input.type === "password") {
+            input.type = "text";
+            icon.classList.replace('bi-eye', 'bi-eye-slash');
+        } else {
+            input.type = "password";
+            icon.classList.replace('bi-eye-slash', 'bi-eye');
+        }
+    }
+
+    // --- SYSTÈME VOCAL INTELLIGENT ---
+    function speakErrors() {
+        const errors = document.querySelectorAll('.error-msg');
+        const mainError = document.getElementById('voiceErrorSource');
+        
+        if (errors.length > 0 || mainError) {
+            let textToSpeak = "";
+            
+            if (mainError) {
+                textToSpeak += "Alerte de sécurité. Des erreurs ont été détectées dans votre formulaire. ";
+            }
+
+            errors.forEach(err => {
+                textToSpeak += err.innerText + ". ";
+            });
+
+            if (window.speechSynthesis) {
+                // On vide la file d'attente
+                window.speechSynthesis.cancel();
+                
+                const utterance = new SpeechSynthesisUtterance(textToSpeak);
+                utterance.lang = 'fr-FR';
+                utterance.rate = 0.95;
+                utterance.pitch = 1.1;
+
+                // Sélection de la voix
+                const voices = window.speechSynthesis.getVoices();
+                const femaleVoice = voices.find(v => 
+                    v.lang.includes('fr') && 
+                    (v.name.includes('Julie') || v.name.includes('Hortense') || v.name.includes('Google') || v.name.includes('Female'))
+                );
+
+                if (femaleVoice) utterance.voice = femaleVoice;
+                
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+    }
+
+    // Chargement asynchrone pour les navigateurs basés sur Chrome
+    if (window.speechSynthesis) {
+        if (speechSynthesis.onvoiceschanged !== undefined) {
+            speechSynthesis.onvoiceschanged = speakErrors;
+        }
+    }
+
+    // Lancement au chargement
+    window.onload = () => {
+        setTimeout(speakErrors, 1000);
+    };
+
+    // Déclencheur de secours (clic n'importe où sur la page)
+    document.addEventListener('click', () => {
+        if (window.speechSynthesis && !window.speechSynthesis.speaking) {
+            speakErrors();
+        }
+    }, { once: true });
+</script>
+{% endblock %}

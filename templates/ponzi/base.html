@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>{% block title %}IIBF INVEST{% endblock %}</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --iibf-dark: #0f172a;
+            --iibf-accent: #3b82f6; 
+            --iibf-gold: #f59e0b;
+            --iibf-card: rgba(30, 41, 59, 0.7);
+            --iibf-danger: #ff4d4d;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--iibf-dark);
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        .app-viewport {
+            width: 100%;
+            margin: 0 auto;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--iibf-dark);
+        }
+
+        .app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: rgba(15, 23, 42, 0.95);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1001;
+        }
+
+        .brand-logo {
+            font-weight: 800;
+            font-size: 1.2rem;
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+
+        .btn-logout-top {
+            color: var(--iibf-danger);
+            text-decoration: none !important;
+            font-size: 0.75rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            border: 1px solid rgba(255, 77, 77, 0.3);
+            border-radius: 8px;
+        }
+
+        .content-body {
+            flex: 1;
+            padding-bottom: 90px; 
+        }
+
+        .mobile-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 75px;
+            background: rgba(15, 23, 42, 0.98);
+            backdrop-filter: blur(20px);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+        }
+
+        .nav-item {
+            text-decoration: none !important;
+            color: rgba(255, 255, 255, 0.4);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.65rem;
+            font-weight: 700;
+        }
+
+        .nav-item i { font-size: 1.4rem; margin-bottom: 3px; }
+        .nav-item.active { color: var(--iibf-accent); }
+        .text-gold { color: var(--iibf-gold) !important; }
+    </style>
+</head>
+<body>
+
+    <div class="app-viewport">
+        
+        {% if user.is_authenticated %}
+        <header class="app-header">
+            <h1 class="brand-logo">IIBF <span class="text-gold">INVEST</span></h1>
+            
+            <form action="/users/deconnexion/" method="post" id="logout-form" style="display: none;">
+                {% csrf_token %}
+            </form>
+
+            <a href="javascript:void(0)" onclick="if(confirm('Fermer votre session ?')) document.getElementById('logout-form').submit();" class="btn-logout-top">
+                <i class="bi bi-power"></i>
+                <span>QUITTER</span>
+            </a>
+        </header>
+        {% endif %}
+
+        <main class="content-body">
+            {% block content %}
+            {% endblock %}
+        </main>
+
+        {% if user.is_authenticated %}
+        <nav class="mobile-nav">
+            <a href="{% url 'dashboard' %}" class="nav-item {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                <i class="bi bi-grid-1x2-fill"></i>
+                <span>ACCUEIL</span>
+            </a>
+            
+            <a href="{% url 'packs' %}" class="nav-item {% if request.resolver_match.url_name == 'packs' %}active{% endif %}">
+                <i class="bi bi-graph-up-arrow text-gold"></i>
+                <span>MARCHÉS</span>
+            </a>
+
+            <a href="{% url 'demander_retrait' %}" class="nav-item {% if request.resolver_match.url_name == 'demander_retrait' %}active{% endif %}">
+                <i class="bi bi-wallet2"></i>
+                <span>RETRAIT</span>
+            </a>
+        </nav>
+        {% endif %}
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

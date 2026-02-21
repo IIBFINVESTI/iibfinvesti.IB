@@ -1,0 +1,198 @@
+{% extends "ponzi/base.html" %}
+
+{% block title %}IIBF | Retrait Sécurisé{% endblock %}
+
+{% block content %}
+<style>
+    /* CADRAGE APP */
+    .app-viewport {
+        max-width: 500px;
+        margin: 0 auto;
+        padding-bottom: 50px;
+    }
+
+    /* CARTE DE SOLDE STYLE NÉON */
+    .wallet-display {
+        background: linear-gradient(145deg, #1e293b 0%, #0f172a 100%);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 28px;
+        padding: 30px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+    }
+
+    .wallet-display::after {
+        content: "";
+        position: absolute;
+        bottom: -20px;
+        right: -20px;
+        width: 100px;
+        height: 100px;
+        background: var(--iibf-gold);
+        filter: blur(80px);
+        opacity: 0.15;
+    }
+
+    /* FORMULAIRE BANCAIRE GLASS */
+    .bank-form-card {
+        background: rgba(17, 24, 39, 0.6);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 30px;
+        padding: 25px;
+    }
+
+    .input-wrapper-bank {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 18px;
+        padding: 15px 20px;
+        transition: 0.3s;
+    }
+
+    .input-wrapper-bank:focus-within {
+        border-color: var(--iibf-accent);
+        background: rgba(255, 255, 255, 0.07);
+        box-shadow: 0 0 15px rgba(59, 130, 246, 0.1);
+    }
+
+    .bank-field {
+        background: transparent;
+        border: none;
+        color: white;
+        font-size: 1.2rem;
+        font-weight: 700;
+        width: 100%;
+        outline: none;
+    }
+
+    /* SELECTEUR DE MÉTHODE */
+    .method-selector { display: none; }
+    
+    .method-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 15px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        cursor: pointer;
+        transition: 0.3s;
+        background: rgba(255, 255, 255, 0.02);
+    }
+
+    .method-selector:checked + .method-card {
+        border-color: var(--iibf-gold);
+        background: rgba(245, 158, 11, 0.05);
+        transform: translateY(-3px);
+    }
+
+    .method-logo {
+        width: 45px;
+        height: 45px;
+        object-fit: contain;
+        margin-bottom: 8px;
+        border-radius: 10px;
+    }
+
+    .btn-confirm {
+        background: var(--iibf-gold);
+        color: #000;
+        border: none;
+        border-radius: 20px;
+        padding: 18px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        box-shadow: 0 10px 25px rgba(245, 158, 11, 0.2);
+    }
+
+    .btn-confirm:active { transform: scale(0.96); }
+</style>
+
+<div class="app-viewport px-3 pt-3">
+    
+    <div class="d-flex align-items-center mb-4">
+        <a href="{% url 'dashboard' %}" class="btn btn-dark rounded-circle p-2 me-3 border-secondary border-opacity-25">
+            <i class="bi bi-chevron-left px-1"></i>
+        </a>
+        <h5 class="fw-800 mb-0">Retrait de fonds</h5>
+    </div>
+
+    <div class="wallet-display mb-4">
+        <div class="row align-items-center">
+            <div class="col-8">
+                <span class="text-white-50 small fw-bold text-uppercase" style="letter-spacing: 1px;">Solde Actuel</span>
+                <h2 class="fw-bold text-white mt-1 mb-0">
+                    {{ user.profile.solde|default:"0" }} <span class="fs-6 text-warning">XAF</span>
+                </h2>
+            </div>
+            <div class="col-4 text-end">
+                <div class="bg-success bg-opacity-10 text-success small p-2 rounded-pill d-inline-block fw-bold">
+                    <i class="bi bi-shield-check"></i> Actif
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bank-form-card">
+        <form method="POST">
+            {% csrf_token %}
+            
+            <div class="mb-4">
+                <label class="small fw-bold text-white-50 mb-2">MONTANT À RETIRER</label>
+                <div class="input-wrapper-bank d-flex align-items-center">
+                    <input type="number" name="montant" class="bank-field" placeholder="0.00" min="500" required>
+                    <span class="text-white-50 fw-bold small ms-2">XAF</span>
+                </div>
+                <div class="d-flex justify-content-between mt-2 px-1">
+                    <span class="text-white-50" style="font-size: 0.65rem;">Min: 500 FCFA</span>
+                    <span class="text-warning" style="font-size: 0.65rem;">Frais: 0%</span>
+                </div>
+            </div>
+
+            <label class="small fw-bold text-white-50 mb-3">MÉTHODE DE RÉCEPTION</label>
+            <div class="row g-3 mb-4">
+                <div class="col-6">
+                    <input type="radio" name="methode" value="OM" id="om" class="method-selector" checked>
+                    <label for="om" class="method-card w-100">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/d/d3/Orange_logo.svg" class="method-logo" alt="Orange">
+                        <span class="text-white fw-bold small">Orange</span>
+                    </label>
+                </div>
+                <div class="col-6">
+                    <input type="radio" name="methode" value="MOMO" id="momo" class="method-selector">
+                    <label for="momo" class="method-card w-100">
+                        <img src="https://img.freepik.com/vecteurs-premium/mtn-logo-icon_1140924-415.jpg" class="method-logo" alt="MTN">
+                        <span class="text-white fw-bold small">MTN Momo</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="small fw-bold text-white-50 mb-2">NUMÉRO DE TÉLÉPHONE</label>
+                <div class="input-wrapper-bank d-flex align-items-center">
+                    <i class="bi bi-telephone text-white-50 me-3"></i>
+                    <input type="text" name="telephone" class="bank-field" placeholder="6xxxxxxxx" required>
+                </div>
+                <p class="text-white-50 mt-3" style="font-size: 0.7rem; line-height: 1.4;">
+                    <i class="bi bi-info-circle-fill text-info me-1"></i> 
+                    Les fonds seront transférés sur ce compte sous 24h après validation.
+                </p>
+            </div>
+
+            <button type="submit" class="btn btn-confirm w-100 shadow-lg mt-2">
+                CONFIRMER LE RETRAIT <i class="bi bi-arrow-right-short ms-1 fs-4"></i>
+            </button>
+        </form>
+    </div>
+
+    <div class="text-center mt-5 opacity-25">
+        <span class="text-white small fw-bold" style="font-size: 10px;">
+            <i class="bi bi-lock-fill me-1"></i> TRANSACTION SÉCURISÉE SSL END-TO-END
+        </span>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,148 @@
+{% extends "ponzi/base.html" %}
+
+{% block title %}IIBF - Marchés Financiers{% endblock %}
+
+{% block content %}
+<style>
+    :root {
+        --bank-blue: #0f172a;
+        --bank-gold: #c5a059;
+        --glass-bg: rgba(255, 255, 255, 0.98);
+    }
+
+    body { background-color: #f8fafc; font-family: 'Inter', sans-serif; }
+    .app-container { max-width: 500px; margin: 0 auto; padding-bottom: 90px; }
+
+    .market-header {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        padding: 30px 20px;
+        border-radius: 0 0 30px 30px;
+        color: white;
+        margin-bottom: 25px;
+    }
+
+    .pack-card {
+        border: none;
+        border-radius: 20px;
+        background: white;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+        margin-bottom: 20px;
+        padding: 20px;
+    }
+
+    .price-text {
+        color: #0f172a !important;
+        font-weight: 800;
+        font-size: 1.5rem;
+    }
+
+    .pack-badge {
+        background: rgba(197, 160, 89, 0.1);
+        color: var(--bank-gold);
+        font-weight: 800;
+        font-size: 0.7rem;
+        padding: 5px 12px;
+        border-radius: 50px;
+    }
+
+    .btn-activate {
+        background: var(--bank-gold);
+        color: white !important;
+        border: none;
+        border-radius: 12px;
+        font-weight: 700;
+        width: 100%;
+        padding: 12px;
+        transition: 0.3s;
+    }
+
+    .profit-tag {
+        color: #10b981;
+        font-weight: 800;
+        font-size: 1.1rem;
+    }
+</style>
+
+<div class="app-container">
+    <div class="market-header text-center">
+        <h6 class="text-white-50 small fw-bold mb-1">OPPORTUNITÉS D'INVESTISSEMENT</h6>
+        <h4 class="fw-bold mb-0">Marchés Disponibles</h4>
+        <div class="mt-3">
+            <span class="small opacity-75">Solde actuel :</span>
+            <span class="fw-bold" style="color: var(--bank-gold);">
+                {{ user.profil.solde|default:"0" }} FCFA
+            </span>
+        </div>
+    </div>
+
+    {% if messages %}
+    <div class="px-3">
+        {% for message in messages %}
+        <div class="alert alert-warning small fw-bold rounded-4 shadow-sm border-0 mb-3">
+            <i class="bi bi-exclamation-circle-fill me-2"></i> {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="px-3">
+        {% for grille in grilles %}
+        <div class="pack-card">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+                <div>
+                    <span class="pack-badge text-uppercase">{{ grille.nom }}</span>
+                    <h3 class="mt-2 mb-0 price-text">
+                        {{ grille.montant }} <small class="fs-6 text-muted">FCFA</small>
+                    </h3>
+                </div>
+                <div class="text-end">
+                    <div class="profit-tag">+{{ grille.pourcentage_gain|default:"0" }}%</div>
+                    <small class="text-muted fw-bold">PAR JOUR</small>
+                </div>
+            </div>
+
+            <div class="bg-light rounded-3 p-3 mb-4">
+                <div class="d-flex justify-content-between mb-1 small">
+                    <span class="text-muted">Type de rendement</span>
+                    <span class="fw-bold text-dark">Fixe Quotidien</span>
+                </div>
+                <div class="d-flex justify-content-between small">
+                    <span class="text-muted">Cycle de trading</span>
+                    <span class="fw-bold text-dark">24 Heures</span>
+                </div>
+            </div>
+
+            <form action="{% url 'activer_pack' grille.id %}" method="POST" onsubmit="return confirmerAchat('{{ grille.nom }}', '{{ grille.montant }}')">
+                {% csrf_token %}
+                <button type="submit" class="btn-activate">
+                    <i class="bi bi-lightning-charge-fill me-2"></i> ACTIVER CE MARCHÉ
+                </button>
+            </form>
+        </div>
+        {% empty %}
+        <div class="text-center py-5">
+            <i class="bi bi-shop fs-1 text-muted opacity-25"></i>
+            <p class="text-muted mt-2">Aucun marché n'est disponible pour le moment.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<nav class="bottom-nav" style="position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 500px; height: 70px; background: white; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #edf2f7; z-index: 1000; box-shadow: 0 -5px 20px rgba(0,0,0,0.05);">
+    <a href="{% url 'dashboard' %}" class="nav-item" style="text-align: center; color: #94a3b8; text-decoration: none; font-size: 0.7rem; font-weight: 600; text-transform: uppercase;">
+        <i class="bi bi-grid-1x2-fill" style="font-size: 1.4rem; display: block;"></i> Banque
+    </a>
+    <a href="{% url 'packs' %}" class="nav-item active" style="text-align: center; color: var(--bank-gold); text-decoration: none; font-size: 0.7rem; font-weight: 600; text-transform: uppercase;">
+        <i class="bi bi-stack" style="font-size: 1.4rem; display: block;"></i> Marchés
+    </a>
+    <a href="{% url 'demander_retrait' %}" class="nav-item" style="text-align: center; color: #94a3b8; text-decoration: none; font-size: 0.7rem; font-weight: 600; text-transform: uppercase;">
+        <i class="bi bi-arrow-left-right" style="font-size: 1.4rem; display: block;"></i> Retrait
+    </a>
+</nav>
+
+<script>
+    function confirmerAchat(nom, montant) {
+        return confirm("CONFIRMATION IIBF\n\nSouhaitez-vous investir " + montant + " FCFA dans le marché " + nom + " ?");
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,271 @@
+{% extends "ponzi/base.html" %}
+
+{% block title %}IIBF FOUNDATION - Private Banking{% endblock %}
+
+{% block content %}
+<style>
+    :root {
+        --bank-blue: #0f172a;
+        --bank-gold: #c5a059;
+        --glass-bg: rgba(255, 255, 255, 0.98);
+        --primary-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    }
+
+    body {
+        background-color: #f8fafc;
+        overflow-x: hidden;
+        user-select: none;
+        font-family: 'Inter', sans-serif;
+    }
+
+    .app-container {
+        max-width: 500px;
+        margin: 0 auto;
+        padding-bottom: 90px;
+    }
+
+    .card-wallet {
+        border: none;
+        border-radius: 24px;
+        background: var(--primary-gradient);
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+    }
+
+    .card-wallet::after {
+        content: "";
+        position: absolute;
+        top: -50%;
+        right: -20%;
+        width: 250px;
+        height: 500px;
+        background: rgba(197, 160, 89, 0.05);
+        transform: rotate(35deg);
+    }
+
+    .card-custom {
+        border: 1px solid rgba(0,0,0,0.05);
+        border-radius: 1.25rem;
+        background: white;
+        transition: all 0.2s ease;
+    }
+
+    .btn-gold {
+        background: var(--bank-gold);
+        color: white !important;
+        border-radius: 50px;
+        font-weight: 700;
+        border: none;
+        box-shadow: 0 4px 10px rgba(197, 160, 89, 0.3);
+    }
+
+    /* BOUTON WHATSAPP SPECIAL */
+    .btn-whatsapp-bank {
+        background: #25D366;
+        color: white !important;
+        border-radius: 15px;
+        font-weight: 700;
+        border: none;
+        box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3);
+        transition: 0.3s;
+    }
+    .btn-whatsapp-bank:hover { transform: scale(1.02); background: #1eb954; }
+
+    .bottom-nav {
+        position: fixed;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
+        max-width: 500px;
+        height: 70px;
+        background: white;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        border-top: 1px solid #edf2f7;
+        z-index: 1000;
+        box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
+    }
+
+    .nav-item {
+        text-align: center;
+        color: #94a3b8;
+        text-decoration: none;
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .nav-item.active { color: var(--bank-gold); }
+    .nav-item i { font-size: 1.4rem; display: block; margin-bottom: 2px; }
+
+    .badge-gold {
+        background: rgba(197, 160, 89, 0.15);
+        color: #8a6d3b;
+        font-weight: 800;
+    }
+
+    .alert-banking {
+        background: white;
+        border-left: 4px solid var(--bank-gold) !important;
+        border-radius: 15px;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        animation: slideIn 0.5s ease-out;
+    }
+
+    @keyframes slideIn {
+        from { transform: translateY(-20px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+</style>
+
+<div class="app-container">
+    
+    <div class="d-flex justify-content-between align-items-center px-4 pt-4 mb-3">
+        <div>
+            <h6 class="text-muted mb-0 small fw-bold">BIENVENUE CHEZ IIBF</h6>
+            <h5 class="fw-bold mb-0">{{ user.username }} <i class="bi bi-patch-check-fill text-primary ms-1"></i></h5>
+        </div>
+        <div class="position-relative">
+            <i class="bi bi-bell fs-4 text-dark"></i>
+            <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"></span>
+        </div>
+    </div>
+
+    {% if messages %}
+        <div class="px-3">
+            {% for message in messages %}
+                <div class="alert alert-banking p-3 border-0 d-flex align-items-center" role="alert">
+                    <div class="rounded-circle p-2 me-3 d-flex align-items-center justify-content-center" style="background: rgba(197, 160, 89, 0.1); width: 40px; height: 40px;">
+                        <i class="bi bi-shield-check-fill" style="color: var(--bank-gold);"></i>
+                    </div>
+                    <div>
+                        <small class="text-muted d-block fw-bold" style="font-size: 0.6rem; letter-spacing: 1px;">NOTIFICATION IIBF</small>
+                        <span class="small fw-bold text-dark">{{ message }}</span>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="card-wallet m-3">
+        <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-start mb-4">
+                <div>
+                    <span class="text-white-50 small text-uppercase fw-bold">Solde Certifié</span>
+                    <h2 class="fw-bold text-white mb-0 mt-1">{{ profil.solde }} <small class="fs-6 opacity-50">FCFA</small></h2>
+                </div>
+                <img src="https://cdn-icons-png.flaticon.com/512/6404/6404078.png" width="35" style="filter: brightness(0) invert(1); opacity: 0.8;">
+            </div>
+            
+            <div class="row g-2">
+                <div class="col-12">
+                    <a href="https://wa.me/237687391981?text=Bonjour%20IIBF,%20je%20souhaite%20faire%20un%20depot%20sur%20mon%20ID:{{user.id}}" class="btn btn-whatsapp-bank w-100 py-3 text-center">
+                        <i class="bi bi-whatsapp me-2"></i>CLIQUE ICI POUR FAIRE TON DÉPÔT
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mx-3 mb-4">
+        <div class="card card-custom p-3 shadow-sm border-0">
+            <label class="small fw-extrabold text-muted mb-2 text-uppercase" style="font-size: 0.65rem;">Votre Lien d'Affiliation (10%)</label>
+            <div class="input-group">
+                <input type="text" class="form-control border-0 bg-light rounded-start-3 fw-bold text-dark small" id="refLink" 
+                       value="http://{{ request.get_host }}{% url 'inscription' %}?ref={{ user.username }}" readonly>
+                <button class="btn btn-dark rounded-end-3 px-3 fw-bold" onclick="copyRef()">COPIER</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="mx-3 mb-4">
+        <h6 class="fw-extrabold text-dark mb-3 px-1 text-uppercase" style="font-size: 0.75rem; letter-spacing: 1px;">Investissement en cours</h6>
+        
+        {% if mes_investissements %}
+            {% for inv in mes_investissements %}
+            <div class="card card-custom p-3 shadow-sm border-0 bg-white mb-2" style="border-left: 4px solid var(--bank-gold) !important;">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="fw-bold mb-0 text-dark">{{ inv.grille.nom }}</h6>
+                        <small class="text-muted">Valeur : {{ inv.grille.montant }} FCFA</small>
+                    </div>
+                    <div class="text-end">
+                        <div class="text-success fw-bold">+{{ inv.grille.pourcentage_gain }}%</div>
+                        <small class="text-muted" style="font-size: 0.6rem;">GAIN / 24H</small>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="card card-custom p-4 shadow-sm border-0 text-center">
+                <p class="small text-muted fw-bold mb-0">CLIQUE SUR "MARCHÉS" POUR INVESTIR</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="mx-3 mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h6 class="fw-extrabold text-dark mb-0 text-uppercase" style="font-size: 0.75rem; letter-spacing: 1px;">Flux de Trésorerie</h6>
+            <span class="badge badge-gold">DIRECT</span>
+        </div>
+        <div class="card card-custom overflow-hidden border-0 shadow-sm">
+            <div class="d-flex align-items-center p-3">
+                <div class="bg-success bg-opacity-10 rounded-circle p-2 me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                    <i class="bi bi-shield-fill-check text-success"></i>
+                </div>
+                <div class="flex-grow-1">
+                    <div class="fw-bold text-dark small">Gains Journaliers (Estimés)</div>
+                    <div class="text-muted" style="font-size: 0.65rem;">Prochain versement : Aujourd'hui 20:00</div>
+                </div>
+                <div class="text-end">
+                    <div class="fw-extrabold text-success small">PENDING</div>
+                    <div class="badge-gold badge px-2 py-1 rounded-pill" style="font-size: 0.55rem;">EN ATTENTE</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<nav class="bottom-nav">
+    <a href="{% url 'dashboard' %}" class="nav-item active">
+        <i class="bi bi-grid-1x2-fill"></i>
+        Banque
+    </a>
+    <a href="{% url 'packs' %}" class="nav-item">
+        <i class="bi bi-stack"></i>
+        Marchés
+    </a>
+    <a href="{% url 'demander_retrait' %}" class="nav-item">
+        <i class="bi bi-arrow-left-right"></i>
+        Retrait
+    </a>
+    <a href="#" class="nav-item">
+        <i class="bi bi-person-badge"></i>
+        Compte
+    </a>
+</nav>
+
+<script>
+    function copyRef() {
+        var copyText = document.getElementById("refLink");
+        copyText.select();
+        navigator.clipboard.writeText(copyText.value);
+        alert("Lien d'affiliation copié !");
+    }
+
+    function speakWelcome() {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const msg = new SpeechSynthesisUtterance("Bienvenue sur IIBF. Veuillez cliquer sur le bouton WhatsApp pour effectuer votre dépôt, ou sur Marchés pour choisir votre pack.");
+            msg.lang = 'fr-FR';
+            window.speechSynthesis.speak(msg);
+        }
+    }
+    window.onload = () => { setTimeout(speakWelcome, 1500); };
+</script>
+{% endblock %}
