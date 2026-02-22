@@ -6,10 +6,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-iibf-plateforme-cle-privee-2026'
 
-DEBUG = True
+DEBUG = False
 
 # AJUSTEMENT : On liste explicitement ton domaine ngrok
-ALLOWED_HOSTS = ['*', 'frontierless-chalky-keturah.ngrok-free.dev']
+ALLOWED_HOSTS = ['AWONOCYRILLE.pythonanywhere.com']
 
 # --- CONFIGURATION CSRF & SESSIONS POUR NGROK ---
 CSRF_TRUSTED_ORIGINS = [
