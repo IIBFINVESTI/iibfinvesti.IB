@@ -9,7 +9,7 @@ SECRET_KEY = 'django-insecure-iibf-plateforme-cle-privee-2026'
 DEBUG = False
 
 # AJUSTEMENT : On liste explicitement ton domaine ngrok
-ALLOWED_HOSTS = ['AWONOCYRILLE.pythonanywhere.com']
+ALLOWED_HOSTS = ['iibfaraba.pythonanywhere.com', 'localhost', '127.0.0.1']
 
 # --- CONFIGURATION CSRF & SESSIONS POUR NGROK ---
 CSRF_TRUSTED_ORIGINS = [
