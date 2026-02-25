@@ -1,0 +1,70 @@
+{% extends "ponzi/base.html" %}
+{% block content %}
+<style>
+    .om-header { background: #ff6600; color: white; border-radius: 15px 15px 0 0; padding: 20px; }
+    .momo-header { background: #ffcc00; color: #004f9f; border-radius: 15px 15px 0 0; padding: 20px; }
+    .payment-card { border-radius: 15px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.5); background: #f8f9fa; }
+    .btn-orange { background: #ff6600; color: white; font-weight: bold; border-radius: 10px; border: none; transition: 0.3s; }
+    .btn-orange:hover { background: #e65c00; transform: translateY(-2px); }
+    
+    /* Animation des notifications */
+    #notification-toast {
+        position: fixed; bottom: 80px; left: 20px; background: rgba(0,0,0,0.8);
+        color: white; padding: 10px 20px; border-radius: 50px; font-size: 0.8rem;
+        display: none; z-index: 1000; border: 1px solid #ff6600;
+    }
+</style>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card payment-card">
+                <div class="om-header text-center">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Orange_logo.svg/1024px-Orange_logo.svg.png" width="40">
+                    <h5 class="mt-2 mb-0">Paiement Sécurisé</h5>
+                </div>
+                <div class="card-body p-4 text-dark">
+                    <form method="POST" action="{% url 'initier_paiement' %}">
+                        {% csrf_token %}
+                        <div class="mb-4 text-center">
+                            <span class="text-muted small">ID TRANSACTION : #{{ request.user.id|add:"204" }}</span>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Montant du dépôt (XAF)</label>
+                            <input type="number" name="amount" class="form-control form-control-lg" placeholder="Entrez le montant" required>
+                        </div>
+
+                        <div class="alert alert-warning small">
+                            <i class="bi bi-info-circle-fill"></i> Les fonds seront crédités instantanément après validation de votre code PIN.
+                        </div>
+
+                        <button type="submit" class="btn btn-orange w-100 py-3">
+                            PROCÉDER AU DÉPÔT <i class="bi bi-arrow-right-circle ms-2"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="notification-toast"></div>
+
+<script>
+    const userNames = ["Ahmadou", "Cédric", "Moussa", "Jean-Pierre", "Fabiola", "Inès"];
+    const amounts = ["10.000", "50.000", "25.000", "100.000", "5.000"];
+
+    function showToast() {
+        const toast = document.getElementById('notification-toast');
+        const name = userNames[Math.floor(Math.random() * userNames.length)];
+        const amount = amounts[Math.floor(Math.random() * amounts.length)];
+        
+        toast.innerHTML = `<i class="bi bi-check-circle-fill text-success"></i> ${name} vient de déposer ${amount} FCFA`;
+        toast.style.display = 'block';
+        
+        setTimeout(() => { toast.style.display = 'none'; }, 4000);
+    }
+    setInterval(showToast, 12000); // Toutes les 12 secondes
+</script>
+{% endblock %}

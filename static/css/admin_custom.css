@@ -1,0 +1,47 @@
+/* --- Style Premium IIBF Administrateur --- */
+
+/* Police moderne et grasse pour tout le site */
+body {
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
+    font-weight: 500;
+}
+
+/* Titre principal IIBF TECHNOLOGY en haut à gauche */
+.brand-text {
+    font-weight: 800 !important;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #00ffcc !important; /* Couleur néon high-tech */
+}
+
+/* Titres des sections dans le menu latéral */
+.nav-header {
+    font-size: 0.9rem !important;
+    font-weight: 800 !important;
+    color: #adb5bd !important;
+    text-transform: uppercase;
+    padding: 10px 15px !important;
+}
+
+/* Liens du menu (Grilles, Profils, etc.) */
+.nav-sidebar .nav-link {
+    font-size: 1.05rem !important;
+    margin-bottom: 4px;
+    border-radius: 8px;
+}
+
+/* Mise en évidence du texte "IIBF ADMINISTRATEUR" */
+.content-header h1 {
+    font-weight: 800 !important;
+    text-transform: uppercase;
+    letter-spacing: -0.5px;
+    border-left: 5px solid #007bff;
+    padding-left: 15px;
+}
+
+/* Boutons d'action (Ajouter, Sauvegarder) */
+.btn {
+    font-weight: 700 !important;
+    text-transform: uppercase;
+    border-radius: 4px !important;
+}

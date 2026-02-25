@@ -2,23 +2,30 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    # --- 1. Accueil & Landing Page ---
+    # --- 1. ACCUEIL & LANDING PAGE ---
+    # Affiche la page d'entrée du site
     path('', views.index_view, name='index'), 
     
-    # --- 2. Espace Personnel (Le Dashboard) ---
+    # --- 2. ESPACE PERSONNEL (DASHBOARD) ---
+    # Le cœur de l'application pour l'utilisateur connecté
     path('dashboard/', views.dashboard_view, name='dashboard'),
     
-    # --- 3. Le Marché (Catalogue des Packs) ---
+    # --- 3. LE MARCHÉ (CATALOGUE DES PACKS) ---
+    # Liste tous les packs d'investissement disponibles
     path('marches/', views.liste_packs, name='packs'),
-    
-    # --- 4. Gestion des Transactions (Retraits) ---
-    path('retrait/', views.demander_retrait, name='demander_retrait'),
-    
-    # --- 5. Actions d'Investissement ---
-    path('activer-pack/<int:grille_id>/', views.activer_pack, name='activer_pack'),
 
-    # --- 6. Outils Système & Maintenance ---
-    # J'ai gardé le nom 'simuler_gains' que tu avais, 
-    # MAIS j'ai ajouté 'simuler_gains_test' au cas où ton template l'appelle ainsi.
-    path('simuler-gains/', views.simuler_gains_test, name='simuler_gains_test'),
+    # --- 4. INTERFACE DE DÉPÔT LIBRE ---
+    # La page avec les logos Orange/MTN pour recharger le solde
+    path('depot/', views.initier_depot, name='depot'),
+    
+    # --- 5. GESTION DES FLUX FINANCIERS (RETRAITS) ---
+    # Formulaire pour retirer de l'argent le samedi soir
+    path('retrait/', views.demander_retrait, name='demander_retrait'),
+
+    # --- 6. SYSTÈME DE PAIEMENT MONETBIL ---
+    # Envoie l'utilisateur vers le widget de paiement
+    path('initier-paiement/', views.initier_paiement, name='initier-paiement'),
+
+    # URL invisible appelée par Monetbil pour confirmer la réception de l'argent
+    path('monetbil-webhook/', views.monetbil_webhook, name='monetbil-webhook'),
 ]
