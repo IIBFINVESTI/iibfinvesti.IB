@@ -129,7 +129,7 @@
                 </div>
             </div>
 
-            <form action="{% url 'initier-paiement' %}" method="POST" onsubmit="return confirmerAchat('{{ grille.nom|escapejs }}', '{{ grille.montant|escapejs }}')">
+            <form action="{% url 'initier-paiement' grille.id %}" method="POST" onsubmit="return confirmerAchat('{{ grille.nom|escapejs }}', '{{ grille.montant|escapejs }}')">
                 {% csrf_token %}
                 <input type="hidden" name="amount" value="{{ grille.montant }}">
                 <input type="hidden" name="grille_id" value="{{ grille.id }}">
@@ -165,7 +165,6 @@
 
 <script>
     function confirmerAchat(nom, montant) {
-        // Ajout d'une sécurité pour éviter que le JS ne bloque le formulaire en cas d'erreur de format
         try {
             const montantFormate = Number(montant).toLocaleString('fr-FR');
             return confirm("PROCÉDURE DE PAIEMENT IIBF\n\nSouhaitez-vous activer le marché " + nom + " pour " + montantFormate + " FCFA ?\n\nVous allez être redirigé vers Monetbil.");
